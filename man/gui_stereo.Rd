@@ -1,7 +1,8 @@
 \name{gui_stereo}
 \alias{gui_stereo}
 \title{Stereo Tour GUI...}
-\usage{gui_stereo(data=flea, ...)}
+\usage{gui_stereo(data = flea, ...)
+}
 \description{Stereo Tour GUI                                   
 Displays an Stereo Tour GUI}
 \details{GUI allows users to control the Stereo tour by simply moving and clicking their mouses.
@@ -21,5 +22,9 @@ will pop up when the mouse is moved over the GUI, which give hints about the fun
 \author{Bei Huang\email{beihuang@iastate.edu}, Di Cook \email{dicook@iastate.edu}, and Hadley Wickham \email{hadley@rice.edu}}
 \keyword{display_stereo}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
-\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{\dontrun{gui_stereo(flea)}}
+\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}
+}
+\examples{\dontrun{
+    gui_stereo(flea)
+}}
+

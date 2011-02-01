@@ -1,13 +1,15 @@
 \name{gui_density}
 \alias{gui_density}
 \title{Density Tour GUI...}
-\usage{gui_density(data=flea, ...)}
+\usage{gui_density(data = flea, ...)
+}
 \description{Density Tour GUI                                   
 Displays a Density Tour GUI}
 \details{GUI allows users to control the density tour by simply moving and clicking their mouses.
 Variable Selection checkboxes contains all the numeric variables, and at least two of them need to be checked to make the display work.
 the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
-isn't implemented with the density tour yet. 
+users specify the class variable, the observations will be considered as different classes according to this 
+variable, and these will appear as rainbow colors in the rug segments.
 Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
 default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
@@ -26,5 +28,9 @@ will pop up when the mouse is moved over the GUI, which give hints about the fun
 \author{Bei Huang\email{beihuang@iastate.edu}, Di Cook \email{dicook@iastate.edu}, and Hadley Wickham \email{hadley@rice.edu}}
 \keyword{display_density}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
-\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{\dontrun{gui_density(flea)}}
+\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}
+}
+\examples{\dontrun{
+    gui_density(flea)
+}}
+

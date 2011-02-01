@@ -27,7 +27,7 @@
 #' @examples
 #' \dontrun{gui_xy(flea)}
 gui_xy <- function(data = flea, ...) {
-  require(tourr)
+  require("tourr")
   require("colorspace")
   require("gWidgets")
   require("RGtk2")

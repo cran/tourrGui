@@ -1,7 +1,8 @@
 \name{gui_image}
 \alias{gui_image}
 \title{Image Tour GUI...}
-\usage{gui_image(data=ozone, ...)}
+\usage{gui_image(data = ozone, ...)
+}
 \description{Image Tour GUI                                   
 Displays an Image Tour GUI}
 \details{This GUI allows users to control an image tour plot by simply moving and clicking their mouses. 
@@ -17,5 +18,9 @@ will pop up when the mouse is moved over the GUI, which give hints about the fun
 \author{Bei Huang\email{beihuang@iastate.edu}, Di Cook \email{dicook@iastate.edu}, and Hadley Wickham \email{hadley@rice.edu}}
 \keyword{display_image}
 \arguments{\item{data}{a 3d array, the first two dimensions are locations on a grid, and the 3rd dimension gives the observations to be mixed with the tour.defaults to ozone dataset}
-\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{\dontrun{gui_image(ozone)}}
+\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}
+}
+\examples{\dontrun{
+    gui_image(ozone)
+}}
+

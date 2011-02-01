@@ -1,7 +1,8 @@
 \name{gui_xy}
 \alias{gui_xy}
 \title{Scatterplot Tour GUI...}
-\usage{gui_xy(data=flea, ...)}
+\usage{gui_xy(data = flea, ...)
+}
 \description{Scatterplot Tour GUI
 A graphical user interface enabling interactive control of a scatterplot tour.}
 \details{GUI allows users to control the scatterplot tour by simply moving and clicking their mouses.
@@ -25,5 +26,9 @@ will pop up when the mouse is moved over the GUI, which give hints about the fun
 \author{Bei Huang\email{beihuang@iastate.edu}, Di Cook \email{dicook@iastate.edu}, and Hadley Wickham \email{hadley@rice.edu}}
 \keyword{hplot}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
-\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{\dontrun{gui_xy(flea)}}
+\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}
+}
+\examples{\dontrun{
+    gui_xy(flea)
+}}
+

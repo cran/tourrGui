@@ -1,7 +1,8 @@
 \name{gui_andrews}
 \alias{gui_andrews}
 \title{Andrews Tour GUI...}
-\usage{gui_andrews(data=flea, ...)}
+\usage{gui_andrews(data = flea, ...)
+}
 \description{Andrews Tour GUI                                  
 Displays an Andrews Tour GUI}
 \details{GUI allows users to control the andrews tour by simply moving and clicking their mouses. 
@@ -23,5 +24,9 @@ will pop up when the mouse is moved over the GUI, which give hints about the fun
 \author{Bei Huang\email{beihuang@iastate.edu}, Di Cook \email{dicook@iastate.edu}, and Hadley Wickham \email{hadley@rice.edu}}
 \keyword{hplot}
 \arguments{\item{data}{matrix, or data frame containing numeric columns, defaults to flea dataset}
-\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}}
-\examples{\dontrun{gui_andrews(flea)}}
+\item{...}{other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}}
+}
+\examples{\dontrun{
+    gui_andrews(flea)
+}}
+

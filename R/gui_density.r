@@ -4,7 +4,8 @@
 #'This GUI allows users to control the density tour by simply moving and clicking their mouses.
 #'The Variable Selection checkboxes contains all the numeric variables, and at least two of them need to be checked to make the display work.
 #'All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
-#'Color isn't implemented with the density tour yet. 
+#'After users specify the class variable, the observations will be considered as different classes according to this 
+#'categorical variable, and these will appear as rainbow colors in the rug segments.
 #'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
 #'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
 #'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
@@ -28,9 +29,10 @@
 #' @examples
 #' \dontrun{gui_density(flea)}
 gui_density <- function(data = flea, ...) {
-  require(tourr)
-  require(gWidgets)
-  require(RGtk2)
+  require("tourr")
+  require("colorspace")
+  require("gWidgets")
+  require("RGtk2")
   options("guiToolkit"="RGtk2")
   require(ash)
 
@@ -121,7 +123,7 @@ gui_density <- function(data = flea, ...) {
 
   # method control
   vbox[1, 3, anchor = c(-1, 0)] <- "Method Type"
-  method_types <- c("density","hist","ash")
+  method_types <- c("ash", "density","hist")
   vbox[2, 3, anchor = c(-1, 0)] <- MethodType <- gradio(method_types)
   tooltip(MethodType) <- "Select a display method for the 1D tour."
     
@@ -206,7 +208,18 @@ tooltip(message1_den) <- "Click here for help."
     return()
   }
    
-  display <- display_dist(method = method_selected, center = center_selected ,col=col) 
+  # Work out point colours
+  cat <- data[cat_selected]
+  if (length(cat_selected) > 0) {
+    # collapse to single variable if multiple selected
+    int <- interaction(cat, drop = TRUE)
+    pal <- rainbow_hcl(length(levels(int)))
+    col <- pal[as.numeric(int)]
+  } else {
+    col <- "black"
+  }
+
+  display <- display_dist(method = method_selected, center = center_selected, rug=TRUE, col=col) 
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
