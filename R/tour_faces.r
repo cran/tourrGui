@@ -1,5 +1,7 @@
 #' Faces Tour Plotting
-#' Plots the Faces Tour in tab g3
+#' Plots the Faces Tour in tab g3, internal function used by gui_tour()
+#'
+#' Sets up the gui for the faces tour
 #'
 #' @keywords internal
 #' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
@@ -7,6 +9,8 @@
 .interface_faces = function(g3, data, w){
 
   # =============== Function: update_tour_faces ==================
+  tour <- NULL
+  tour_anim <- NULL
   update_tour_faces <- function(...) {
     tour <<- .create_face_tour(data,
       var_selected = svalue(Variables_faces),
@@ -50,7 +54,7 @@
   
   num <- sapply(data, is.numeric)
   # ==================Controls==========================
-  vbox_faces <- glayout(cont = g3)
+  vbox_faces <- glayout(container = g3)
     # Variable selection column
     vbox_faces[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
     vbox_faces[2, 1] <- Variables_faces <- gcheckboxgroup(names(data[num]),
@@ -70,7 +74,7 @@
 
   #Guided indices selection
     vbox_faces[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-    IntIndex <-c("holes","cm","lda_pp","pda_pp")
+    IntIndex <-c("holes","cmass","lda_pp","pda_pp")
     vbox_faces[4, 2, anchor=c(-1,-1)] <-  GuidedType_faces <- gdroplist(IntIndex)
     tooltip(GuidedType_faces) <- "Select an index type for guided tour."
 
@@ -110,10 +114,10 @@
         anim_id <<- gIdleAdd(draw_frame_faces)
       }
     }
-    buttonGroup_faces <- ggroup(horizontal = FALSE, cont=vbox_faces)
+    buttonGroup_faces <- ggroup(horizontal = FALSE, container = vbox_faces)
 
     # addSpace(buttonGroup,10)
-    button1_faces<- gbutton("Apply", cont = buttonGroup_faces, handler = function(...){
+    button1_faces<- gbutton("Apply", container = buttonGroup_faces, handler = function(...){
       print("apply from gui_faces")
       pause_faces(FALSE)
       update_tour_faces()
@@ -121,7 +125,7 @@
     tooltip(button1_faces) <- "Click here to update the options."
 
     # addSpace(buttonGroup,10)
-    button2_faces<- gbutton("Quit",cont=buttonGroup_faces, handler = function(...) {
+    button2_faces<- gbutton("Quit",container = buttonGroup_faces, handler = function(...) {
       pause_faces(TRUE)
       dispose(w)
     })

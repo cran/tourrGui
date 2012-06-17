@@ -1,28 +1,33 @@
-#' Scatmat Tour GUI                                   
-#' Displays an Scatmat Tour GUI                       
-#'
-#'This GUI allows users to control the scatter matrix tour by simply moving and clicking their mouses.
-#'The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
-#'All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
-#'Color isn't implemented with the scatmat tour yet. 
-#'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-#'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-#'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
-#'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
-#'The Projections Dimension radio buttons allow us to select pojection dimension for the nD tour. 
-#'The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
-#'The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
-#'The Apply button allows users to update the nD tour, when it doesn't automatically update.
-#'The Quit button allows users to close thie GUI window.
-#'The Help button provides information about the tour and also what this GUI can do.
-#'Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
-#'  
-#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
-#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-#' @keywords display_scatmat
-#' @examples
-#' \dontrun{gui_scatmat(flea)}
+##' Scatmat Tour GUI                                   
+##' Displays an Scatmat Tour GUI                       
+##'
+##' This GUI allows users to control the scatter matrix tour by simply moving and clicking their mouses.
+##' The Variable Selection checkboxes contains all the numeric variables, and at least three of them need to be checked to make the display work.
+##' All the categorical variables go to the Class Seclection box. We should select the class variable by double clicking the variable names. 
+##' Color isn't implemented with the scatmat tour yet. 
+##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
+##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
+##' The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
+##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+##' The Projections Dimension radio buttons allow us to select pojection dimension for the nD tour. 
+##' The Speed slider can control the speed of the nD tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
+##' The Pause check box allow users to pause the dynamic nD tour and have a close examination on the details.
+##' The Apply button allows users to update the nD tour, when it doesn't automatically update.
+##' The Quit button allows users to close thie GUI window.
+##' The Help button provides information about the tour and also what this GUI can do.
+##' Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
+##'  
+##' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+##' @keywords display_scatmat
+##' @references Bei Huang, Dianne Cook, Hadley Wickham (2012).
+##'   tourrGui: A gWidgets GUI for the Tour to Explore High-Dimensional
+##'   Data Using Low-Dimensional Projections. Journal of Statistical
+##'   Software, 49(6), 1-12. \url{http://www.jstatsoft.org/v49/i06/}.
+##' @export
+##' @examples
+##' \dontrun{gui_scatmat(flea)}
 gui_scatmat <- function(data = flea, ...) {
   require(tourr)
   require(gWidgets)
@@ -71,7 +76,7 @@ gui_scatmat <- function(data = flea, ...) {
   
   # ==================Controls==========================
   w <- gwindow("2D Tour plot example", visible = FALSE)
-  vbox <- glayout(cont = w)
+  vbox <- glayout(container = w)
 
   # Variable selection column
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
@@ -92,7 +97,7 @@ gui_scatmat <- function(data = flea, ...) {
 
   #Guided indices selection
   vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox[4, 2, anchor=c(-1,-1)] <-  GuidedType <- gdroplist(IntIndex)
   tooltip(GuidedType) <- "Select an index type for guided tour."
 
@@ -129,24 +134,24 @@ gui_scatmat <- function(data = flea, ...) {
       anim_id <<- gIdleAdd(draw_frame)
     }
   }
-  buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
+  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)  
   
   # addSpace(buttonGroup,10)
-  button1<- gbutton("Apply", cont = buttonGroup, handler = function(...){
+  button1<- gbutton("Apply", container = buttonGroup, handler = function(...){
     pause(FALSE)
     update_tour()
   })
   tooltip(button1) <- "Click here to update the options."
 
   # addSpace(buttonGroup,10)
-  button2<- gbutton("Quit",cont=buttonGroup, handler = function(...) {
+  button2<- gbutton("Quit",container = buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
   tooltip(button2) <- "Click here to close this window."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
   # addSpace(buttonGroup,10)
-  message1<-gbutton("Help",cont=buttonGroup, handler = function(...) {
+  message1<-gbutton("Help",container = buttonGroup, handler = function(...) {
 gmessage("The tour is a movie of low dimensional projections of high dimensional data. The projections are usually 1-, 2-, or 3-dimensional. They are used to expose interesting features of the high-dimensional data, such as outliers, clusters, and nonlinear dependencies.
 
 When the projection dimension is 2, the data is usually shown as a scatterplot. Densities or histograms are used to display 1-dimensional projections. Projections of 3 or higher dimensions can be shown as stereo, parallel coordinates, scatterplot matrices or icons.
@@ -174,18 +179,18 @@ tooltip(message1) <- "Click here for help."
   invisible()
 }
 
-#' Scatmat Tour Plotting
-#' Plots the Scatmat Tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
-
+##' Scatmat Tour Plotting
+##' Plots the Scatmat Tour
+##'
+##' Initializes the scatterplot matrix tour
+##'
+##' @keywords internal
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu}
 .create_mat_tour <- function(data, var_selected, cat_selected, projdim_selected, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 3) {
     gmessage("Please select at least three variables", icon = "warning")
     return()
   }
-
 
   # cat("names:\n");print(names(data))
   # cat("\n\ndimnames:\n");print(dimnames(data))
@@ -196,7 +201,7 @@ tooltip(message1) <- "Click here for help."
     "Grand" = grand_tour(as.numeric(projdim_selected)), 
     "Little" = little_tour(as.numeric(projdim_selected)), 
     "Guided" = switch(guided_type, "holes"=guided_tour(holes,as.numeric(projdim_selected)), 
-				"cm"=guided_tour(cm,as.numeric(projdim_selected)),
+				"cmass"=guided_tour(cmass,as.numeric(projdim_selected)),
 				"lda_pp" = guided_tour(lda_pp(data[,cat_selected]),as.numeric(projdim_selected)),
 				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda),as.numeric(projdim_selected))),
     "Local" = local_tour(basis_init(length(var_selected), 2))

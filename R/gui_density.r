@@ -1,38 +1,41 @@
-#' Density Tour GUI                                   
-#' Displays a Density Tour GUI                       
-#'
-#'This GUI allows users to control the density tour by simply moving and clicking their mouses.
-#'The Variable Selection checkboxes contains all the numeric variables, and at least two of them need to be checked to make the display work.
-#'All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
-#'After users specify the class variable, the observations will be considered as different classes according to this 
-#'categorical variable, and these will appear as rainbow colors in the rug segments.
-#'The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
-#'only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
-#'The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
-#'is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
-#'For high-dimensional data a value closer to 1 would be advised.
-#'The Method Type radio buttons contains three different display methods. They are histogram, density plot and ash plot. 
-#'The distribution of data projected into 1d can be displayed correspondingly as a histogram, kernel density estimate and average shifted histogram.
-#'The Axes Locations column contains two choices, TRUE and FALSE. TRUE means the tour will center at the middle of x-axes, 
-#'FALSE means the tour will wander to the left and right. The default value is TRUE.
-#'The Speed slider can control the speed of the 1D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
-#'The Pause check box allow users to pause the dynamic 1D tour and have a close examination on the details.
-#'The Apply button allows users to update the 1D tour, when it doesn't automatically update.
-#'The Quit button allows users to close thie GUI window.
-#'The Help button provides information about the tour and also what this GUI can do.
-#'Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
-#' 
-#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
-#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-#' @keywords display_density
-#' @examples
-#' \dontrun{gui_density(flea)}
+##' Density Tour GUI                                   
+##' Displays a Density Tour GUI                       
+##'
+##' This GUI allows users to control the density tour by simply moving and clicking their mouses.
+##' The Variable Selection checkboxes contains all the numeric variables, and at least two of them need to be checked to make the display work.
+##' All the categorical variables go to the Class Selection box. We should select the class variable by double clicking the variable names. 
+##' Color isn't implemented with the density tour yet. 
+##' The Tour Type radio buttons contains four different tour types. They are the Grand Tour, Little Tour, Local Tour and Guided Tour. We can 
+##' only choose one type a time. For the Guided Tour, we need to choose an index from the droplist to specify which particular search type is desired. 
+##' The default index would be holes. For tour type Guided(lda_pp) and Guided(pda_pp), we also need to specify class variable first, and the Guided(pda_pp) 
+##' is also controlled by another parameter, lambda. Lambda ranges from 0 to 1, with default at 0.02. A value of 0 will make the tour operate like Guided(lda_pp). 
+##' For high-dimensional data a value closer to 1 would be advised.
+##' The Method Type radio buttons contains three different display methods. They are histogram, density plot and ash plot. 
+##' The distribution of data projected into 1d can be displayed correspondingly as a histogram, kernel density estimate and average shifted histogram.
+##' The Axes Locations column contains two choices, TRUE and FALSE. TRUE means the tour will center at the middle of x-axes, 
+##' FALSE means the tour will wander to the left and right. The default value is TRUE.
+##' The Speed slider can control the speed of the 1D tour. Simply dragging the mouse along the slider, changes the speed from slow to fast.
+##' The Pause check box allow users to pause the dynamic 1D tour and have a close examination on the details.
+##' The Apply button allows users to update the 1D tour, when it doesn't automatically update.
+##' The Quit button allows users to close thie GUI window.
+##' The Help button provides information about the tour and also what this GUI can do.
+##' Tooltips will pop up when the mouse is moved over the GUI, which give hints about the functionality of the different GUI elements.
+##' 
+##' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+##' @keywords display_density
+##' @references Bei Huang, Dianne Cook, Hadley Wickham (2012).
+##'   tourrGui: A gWidgets GUI for the Tour to Explore High-Dimensional
+##'   Data Using Low-Dimensional Projections. Journal of Statistical
+##'   Software, 49(6), 1-12. \url{http://www.jstatsoft.org/v49/i06/}.
+##' @export
+##' @examples
+##' \dontrun{gui_density(flea)}
 gui_density <- function(data = flea, ...) {
-  require("tourr")
-  require("colorspace")
-  require("gWidgets")
-  require("RGtk2")
+  require(tourr)
+  require(gWidgets)
+  require(RGtk2)
   options("guiToolkit"="RGtk2")
   require(ash)
 
@@ -53,7 +56,7 @@ gui_density <- function(data = flea, ...) {
       lambda = svalue(LambdaValue),
       aps = svalue(sl)
     )
-    tour_anim <<- with(tour, new_tour(data, tour_path))
+    tour_anim <<- with(tour, new_tour(data, tour_path, start=basis_random(ncol(data), 1)))
     
     tour$display$init(tour$data)
     tour$display$render_frame()
@@ -82,7 +85,7 @@ gui_density <- function(data = flea, ...) {
   
   # ==================Controls==========================
   w <- gwindow("2D Tour plot example", visible = FALSE)
-  vbox <- glayout(cont = w)
+  vbox <- glayout(container = w)
 
   # Variable selection column
   vbox[1, 1, anchor = c(-1, 0)] <- "Variable Selection"
@@ -103,7 +106,7 @@ gui_density <- function(data = flea, ...) {
   tooltip(TourType) <- "Select a 1D Tour type."
 
   vbox[3, 2, anchor=c(-1, 0)] <- "Guided indices"
-  IntIndex <-c("holes","cm","lda_pp","pda_pp")
+  IntIndex <-c("holes","cmass","lda_pp","pda_pp")
   vbox[4, 2, anchor=c(-1,-1)] <-  GuidedType <- gdroplist(IntIndex)
   tooltip(GuidedType) <- "Select an index type for guided tour."
 
@@ -123,7 +126,7 @@ gui_density <- function(data = flea, ...) {
 
   # method control
   vbox[1, 3, anchor = c(-1, 0)] <- "Method Type"
-  method_types <- c("ash", "density","hist")
+  method_types <- c("density","hist","ash")
   vbox[2, 3, anchor = c(-1, 0)] <- MethodType <- gradio(method_types)
   tooltip(MethodType) <- "Select a display method for the 1D tour."
     
@@ -146,24 +149,24 @@ gui_density <- function(data = flea, ...) {
     }
   }
 
-  buttonGroup <- ggroup(horizontal = FALSE, cont=vbox)  
+  buttonGroup <- ggroup(horizontal = FALSE, container = vbox)  
   
   # addSpace(buttonGroup,10)
-  button1<- gbutton("Apply", cont = buttonGroup, handler = function(...) {
+  button1<- gbutton("Apply", container = buttonGroup, handler = function(...) {
     pause(FALSE)
     update_tour()
   })
   tooltip(button1) <- "Click here to update the options."
   
   # addSpace(buttonGroup,10)
-  button2<- gbutton("Quit",cont=buttonGroup, handler = function(...) {
+  button2<- gbutton("Quit",container = buttonGroup, handler = function(...) {
     pause(TRUE)
     dispose(w)
   })
   tooltip(button2) <- "Click here to close this window."
 
   # addSpace(buttonGroup,10)
-  message1_den<-gbutton("Help",cont=buttonGroup, handler = function(...) {
+  message1_den<-gbutton("Help",container = buttonGroup, handler = function(...) {
 gmessage("The tour is a movie of low dimensional projections of high dimensional data. The projections are usually 1-, 2-, or 3-dimensional. They are used to expose interesting features of the high-dimensional data, such as outliers, clusters, and nonlinear dependencies.
 
 When the projection dimension is 2, the data is usually shown as a scatterplot. Densities or histograms are used to display 1-dimensional projections. Projections of 3 or higher dimensions can be shown as stereo, parallel coordinates, scatterplot matrices or icons.
@@ -196,39 +199,29 @@ tooltip(message1_den) <- "Click here for help."
   invisible()
 }
 
-#' Density Tour Plotting
-#' Plots the Density Tour
-#'
-#' @keywords internal
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu},and Hadley Wickham \email{hadley@@rice.edu} 
-
+##' For generating 1D projections
+##'
+##' The 1D projection is used for the density tour
+##'
+##' @keywords internal
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu},and Hadley Wickham \email{hadley@@rice.edu} 
 .create_1d_tour <- function(data, var_selected, cat_selected, method_selected, center_selected, tour_type, guided_type, lambda, aps) {
   if (length(var_selected) < 2) {
     gmessage("Please select at least two variables", icon = "warning")
     return()
   }
    
-  # Work out point colours
-  cat <- data[cat_selected]
-  if (length(cat_selected) > 0) {
-    # collapse to single variable if multiple selected
-    int <- interaction(cat, drop = TRUE)
-    pal <- rainbow_hcl(length(levels(int)))
-    col <- pal[as.numeric(int)]
-  } else {
-    col <- "black"
-  }
-
-  display <- display_dist(method = method_selected, center = center_selected, rug=TRUE, col=col) 
+  display <- display_dist(method = method_selected, center = center_selected ,col=col) 
 
   # Work out which type of tour to use
   tour <- switch(tour_type,
     "Grand" = grand_tour(1), 
     "Little" = little_tour(), 
-    "Guided" = switch(guided_type, "holes"=guided_tour(holes), 
-				"cm"=guided_tour(cm),
-				"lda_pp" = guided_tour(lda_pp(data[,cat_selected])),
-				"pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda))),
+    "Guided" = switch(guided_type,
+               "holes"=guided_tour(holes, 1), 
+	       "cmass"=guided_tour(cmass, 1),
+	       "lda_pp" = guided_tour(lda_pp(data[,cat_selected]), 1),
+	       "pda_pp" = guided_tour(pda_pp(data[,cat_selected],lambda)), 1),
     # "Local" = local_tour()
     "Local" = local_tour(basis_init(length(var_selected), 2))
   )

@@ -1,14 +1,19 @@
-#' Tour GUI                                   
-#' Displays all types of Tour GUI in different tabs                     
-#'
-#' Combines all of the tour gui's into one, putting a separate tab for each.
-#' 
-#' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
-#' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
-#' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
-#' @keywords display
-#' @examples
-#' \dontrun{gui_tour(flea)}
+##' Tour GUI                                   
+##' Displays all types of Tour GUI in different tabs                     
+##'
+##' Combines all of the tour gui's into one, putting a separate tab for each.
+##' 
+##' @param data matrix, or data frame containing numeric columns, defaults to flea dataset
+##' @param ... other arguments passed on to \code{\link{animate}} and \code{\link{display_xy}}
+##' @author Bei Huang\email{beihuang@@iastate.edu}, Di Cook \email{dicook@@iastate.edu}, and Hadley Wickham \email{hadley@@rice.edu} 
+##' @keywords display
+##' @references Bei Huang, Dianne Cook, Hadley Wickham (2012).
+##'   tourrGui: A gWidgets GUI for the Tour to Explore High-Dimensional
+##'   Data Using Low-Dimensional Projections. Journal of Statistical
+##'   Software, 49(6), 1-12. \url{http://www.jstatsoft.org/v49/i06/}.
+##' @export
+##' @examples
+##' \dontrun{gui_tour(flea)}
 gui_tour<- function(data = flea, ...) {
   require(tourr)
   require(colorspace)
@@ -25,15 +30,15 @@ gui_tour<- function(data = flea, ...) {
   tour_anim <- NULL
 
   w <- gwindow("2D Tour plot example", visible = TRUE)
-  mw = gnotebook(cont=w, closebuttons = TRUE)  
-  g8 = ggroup(cont = mw, horizontal = FALSE,label="gui_scatmat") 
-  g7 = ggroup(cont = mw, horizontal = FALSE,label="gui_pcp")
-  g6 = ggroup(cont = mw, horizontal = FALSE,label="gui_stereo")
-  g5 = ggroup(cont = mw, horizontal = FALSE,label="gui_andrews")
-  g4 = ggroup(cont = mw, horizontal = FALSE,label="gui_stars")
-  g3 = ggroup(cont = mw, horizontal = FALSE,label="gui_faces")
-  g2 = ggroup(cont = mw, horizontal = FALSE,label="gui_density")
-  g1 = ggroup(cont = mw, horizontal = FALSE,label="gui_xy") 
+  mw = gnotebook(container = w, closebuttons = TRUE)  
+  g8 = ggroup(container = mw, horizontal = FALSE,label="gui_scatmat") 
+  g7 = ggroup(container = mw, horizontal = FALSE,label="gui_pcp")
+  g6 = ggroup(container = mw, horizontal = FALSE,label="gui_stereo")
+  g5 = ggroup(container = mw, horizontal = FALSE,label="gui_andrews")
+  g4 = ggroup(container = mw, horizontal = FALSE,label="gui_stars")
+  g3 = ggroup(container = mw, horizontal = FALSE,label="gui_faces")
+  g2 = ggroup(container = mw, horizontal = FALSE,label="gui_density")
+  g1 = ggroup(container = mw, horizontal = FALSE,label="gui_xy") 
     
   
   .interface_xy(g1,data,w)
